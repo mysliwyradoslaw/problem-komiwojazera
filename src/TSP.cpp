@@ -1,4 +1,5 @@
 #include "TSP.hpp"
+#include "tsp_setup.hpp"
 
 #include <algorithm>
 #include <stack>
@@ -32,7 +33,26 @@ path_t StageState::get_path() {
  * @return Vector of minimum values in row.
  */
 std::vector<cost_t> CostMatrix::get_min_values_in_rows() const {
-    for (int i; i < matrix_.size(); i++)
+
+    std::vector<cost_t> minValues;
+    cost_t minValue;
+    cost_t value;
+
+    for (int i=0; i < matrix_.size(); i++) {
+        minValue = INF;
+
+        for (int j=0; j < matrix_.size(); j++) {
+            value = matrix_[i][j];
+
+            if (value < minValue) {
+                minValue = value;
+            }
+        }
+
+        minValues.push_back(minValue);
+    }
+
+    return minValues;
 }
 
 /**
@@ -40,7 +60,20 @@ std::vector<cost_t> CostMatrix::get_min_values_in_rows() const {
  * @return Sum of values reduced in rows.
  */
 cost_t CostMatrix::reduce_rows() {
-    throw;  // TODO: Implement it!
+    std::vector<cost_t> minValues = get_min_values_in_rows();
+    cost_t minValue;
+    cost_t sumReduced = 0;
+
+    for (int i=0; i < matrix_.size(); i++) {
+        minValue = minValues[i];
+        sumReduced += minValue;
+
+        for (int j=0; j < matrix_.size(); j++) {
+            matrix_[i][j] = matrix_[i][j] - minValue;
+        }
+    }
+
+    return sumReduced;
 }
 
 /**
@@ -48,8 +81,26 @@ cost_t CostMatrix::reduce_rows() {
  * @return Vector of minimum values in columns.
  */
 std::vector<cost_t> CostMatrix::get_min_values_in_cols() const {
-    std::vector<cost_t> min_values;
-    throw;  // TODO: Implement it!
+
+    std::vector<cost_t> minValues;
+    cost_t minValue;
+    cost_t value;
+
+    for (int j=0; j < matrix_.size(); j++) {
+        minValue = INF;
+
+        for (int i=0; i < matrix_.size(); i++) {
+            value = matrix_[i][j];
+
+            if (value < minValue) {
+                minValue = value;
+            }
+        }
+        
+        minValues.push_back(minValue);
+    }
+
+    return minValues;
 }
 
 /**
@@ -57,7 +108,20 @@ std::vector<cost_t> CostMatrix::get_min_values_in_cols() const {
  * @return Sum of values reduced in columns.
  */
 cost_t CostMatrix::reduce_cols() {
-    throw;  // TODO: Implement it!
+    std::vector<cost_t> minValues = get_min_values_in_cols();
+    cost_t minValue;
+    cost_t sumReduced = 0;
+
+    for (int j=0; j < matrix_.size(); j++) {
+        minValue = minValues[j];
+        sumReduced += minValue;
+
+        for (int i=0; i < matrix_.size(); i++) {
+            matrix_[i][j] = matrix_[i][j] - minValue;
+        }
+    }
+
+    return sumReduced;
 }
 
 /**
@@ -67,7 +131,26 @@ cost_t CostMatrix::reduce_cols() {
  * @return The sum of minimal values in row and col, excluding the intersection value.
  */
 cost_t CostMatrix::get_vertex_cost(std::size_t row, std::size_t col) const {
-    throw;  // TODO: Implement it!
+    cost_t minRowVal = INF;
+    cost_t minColVal = INF;
+    
+    cost_t value;
+
+    for (int i=0; i < matrix_.size(); i++) {
+        value = matrix_[i][col];
+
+        if (value < minRowVal && i != col) {
+            minRowVal = value;
+        }
+    }
+
+    for (int i=0; i < matrix_.size(); i++) {
+        value = matrix_[row][i];
+
+        if (value < minColVal && i != row) {
+            minColVal = value;
+        }
+    }
 }
 
 /* PART 2 */
