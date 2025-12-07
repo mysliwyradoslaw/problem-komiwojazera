@@ -259,6 +259,7 @@ void StageState::update_cost_matrix(vertex_t new_vertex) {
         if (right_vertex_it == unsorted_path_.cend()) {
             break;
         }
+        
         else {
             end_city = right_vertex_it -> col;
         }
