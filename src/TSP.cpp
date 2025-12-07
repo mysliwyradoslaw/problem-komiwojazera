@@ -230,12 +230,41 @@ NewVertex StageState::choose_new_vertex() {
  */
 void StageState::update_cost_matrix(vertex_t new_vertex) {
     
+    int start_city = new_vertex.row;
+    int end_city = new_vertex.col;
+
     matrix_[new_vertex.col][new_vertex.row] = INF;
 
     for (int i=0; i < matrix_.size(); i++) {
         matrix_[i][new_vertex.col] = INF;
         matrix_[new_vertex.row][i] = INF;
     }
+
+    while (true) {
+        const auto& left_vertex_it = std::find_if(unsorted_path_.cbegin(), unsorted_path_.cend(),
+            [start_city](vertex_t vertex){return vertex.col == start_city;});
+        
+        if (left_vertex_it == unsorted_path_.cend()) {
+            break;
+        }
+        else {
+            start_city = left_vertex_it -> row;
+        }
+    }
+
+    while (true) {
+        const auto& right_vertex_it = std::find_if(unsorted_path_.cbegin(), unsorted_path_.cend(),
+            [end_city](vertex_t vertex){return vertex.row == end_city;});
+        
+        if (right_vertex_it == unsorted_path_.cend()) {
+            break;
+        }
+        else {
+            end_city = right_vertex_it -> col;
+        }
+    }
+
+    matrix_[end_city][start_city] = INF;
 }
 
 /**
