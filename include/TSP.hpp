@@ -6,7 +6,7 @@
 #define IMPLEMENTATION_TSP_HPP
 
 #include <vector>
-#include <numeric>
+//#include <numeric>
 #include <ostream>
 
 #include "tsp_setup.hpp"
