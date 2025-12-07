@@ -1,4 +1,4 @@
-#include "TSP.hpp"
+#include "TSP.hxx"
 
 #include <iostream>
 

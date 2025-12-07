@@ -9,7 +9,7 @@
 //#include <numeric>
 #include <ostream>
 
-#include "tsp_setup.hpp"
+#include "tsp_setup.hxx"
 
 using cost_matrix_t = std::vector<std::vector<cost_t>>;
 
