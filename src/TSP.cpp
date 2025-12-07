@@ -28,7 +28,7 @@ std::ostream& operator<<(std::ostream& os, const CostMatrix& cm) {
 path_t StageState::get_path() {
 
     path_t finalPath;
-    int nextCity = 0;
+    std::size_t nextCity = 0;
     bool cityInPath;
 
     while (finalPath.size() < matrix_.size()) {
@@ -47,7 +47,7 @@ path_t StageState::get_path() {
 
         if (!cityInPath) {
 
-            for (int i=0; i < matrix_.size(); i++) {
+            for (std::size_t i=0; i < matrix_.size(); i++) {
                 if(matrix_[nextCity][i] != INF) {
                     finalPath.push_back(nextCity);
                     nextCity = i;
@@ -70,10 +70,10 @@ std::vector<cost_t> CostMatrix::get_min_values_in_rows() const {
     cost_t minValue;
     cost_t value;
 
-    for (int i=0; i < matrix_.size(); i++) {
+    for (std::size_t i=0; i < matrix_.size(); i++) {
         minValue = INF;
 
-        for (int j=0; j < matrix_.size(); j++) {
+        for (std::size_t j=0; j < matrix_.size(); j++) {
             value = matrix_[i][j];
 
             if (value < minValue) {
@@ -96,11 +96,11 @@ cost_t CostMatrix::reduce_rows() {
     cost_t minValue;
     cost_t sumReduced = 0;
 
-    for (int i=0; i < matrix_.size(); i++) {
+    for (std::size_t i=0; i < matrix_.size(); i++) {
         minValue = minValues[i];
         sumReduced += minValue;
 
-        for (int j=0; j < matrix_.size(); j++) {
+        for (std::size_t j=0; j < matrix_.size(); j++) {
             if (matrix_[i][j] != INF) {
                 matrix_[i][j] = matrix_[i][j] - minValue;
             }
@@ -120,10 +120,10 @@ std::vector<cost_t> CostMatrix::get_min_values_in_cols() const {
     cost_t minValue;
     cost_t value;
 
-    for (int j=0; j < matrix_.size(); j++) {
+    for (std::size_t j=0; j < matrix_.size(); j++) {
         minValue = INF;
 
-        for (int i=0; i < matrix_.size(); i++) {
+        for (std::size_t i=0; i < matrix_.size(); i++) {
             value = matrix_[i][j];
 
             if (value < minValue) {
@@ -146,11 +146,11 @@ cost_t CostMatrix::reduce_cols() {
     cost_t minValue;
     cost_t sumReduced = 0;
 
-    for (int j=0; j < matrix_.size(); j++) {
+    for (std::size_t j=0; j < matrix_.size(); j++) {
         minValue = minValues[j];
         sumReduced += minValue;
 
-        for (int i=0; i < matrix_.size(); i++) {
+        for (std::size_t i=0; i < matrix_.size(); i++) {
             if (matrix_[i][j] != INF)
             {
                 matrix_[i][j] = matrix_[i][j] - minValue;
@@ -173,7 +173,7 @@ cost_t CostMatrix::get_vertex_cost(std::size_t row, std::size_t col) const {
     
     cost_t value;
 
-    for (int i=0; i < matrix_.size(); i++) {
+    for (std::size_t i=0; i < matrix_.size(); i++) {
         value = matrix_[row][i];
 
         if (value < minRowVal && i != col) {
@@ -181,7 +181,7 @@ cost_t CostMatrix::get_vertex_cost(std::size_t row, std::size_t col) const {
         }
     }
 
-    for (int i=0; i < matrix_.size(); i++) {
+    for (std::size_t i=0; i < matrix_.size(); i++) {
         value = matrix_[i][col];
 
         if (value < minColVal && i != row) {
@@ -207,8 +207,8 @@ NewVertex StageState::choose_new_vertex() {
     cost_t maxCost = -1;
     NewVertex nextVertex;
 
-    for (int i=0; i < matrix_.size(); i++) {
-        for (int j=0; j < matrix_.size(); j++) {
+    for (std::size_t i=0; i < matrix_.size(); i++) {
+        for (std::size_t j=0; j < matrix_.size(); j++) {
 
             if (matrix_[i][j] == 0) {
                 cost = matrix_.get_vertex_cost(i, j);
@@ -230,12 +230,12 @@ NewVertex StageState::choose_new_vertex() {
  */
 void StageState::update_cost_matrix(vertex_t new_vertex) {
     
-    int start_city = new_vertex.row;
-    int end_city = new_vertex.col;
+    std::size_t start_city = new_vertex.row;
+    std::size_t end_city = new_vertex.col;
 
     matrix_[new_vertex.col][new_vertex.row] = INF;
 
-    for (int i=0; i < matrix_.size(); i++) {
+    for (std::size_t i=0; i < matrix_.size(); i++) {
         matrix_[i][new_vertex.col] = INF;
         matrix_[new_vertex.row][i] = INF;
     }
@@ -275,12 +275,12 @@ void StageState::update_cost_matrix(vertex_t new_vertex) {
 cost_t StageState::reduce_cost_matrix() {
     cost_t reducedSum = matrix_.reduce_rows();
 
-    for (int i=0; i < matrix_.size(); i++) {
+    for (std::size_t i=0; i < matrix_.size(); i++) {
         bool ZeroExists = false;
 
-        for (int j=0; j < matrix_.size(); j++) {
+        for (std::size_t j=0; j < matrix_.size(); j++) {
             
-            if (matrix_[i][j] == 0) {
+            if (matrix_[j][i] == 0) {
                 ZeroExists = true;
                 break;
             }
