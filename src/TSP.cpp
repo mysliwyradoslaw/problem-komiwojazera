@@ -164,7 +164,25 @@ cost_t CostMatrix::get_vertex_cost(std::size_t row, std::size_t col) const {
  * @return The coordinates of the next vertex.
  */
 NewVertex StageState::choose_new_vertex() {
-    throw;  // TODO: Implement it!
+    cost_t cost;
+    cost_t maxCost = 0;
+    vertex_t nextVertex;
+
+    for (int i=0; i < matrix_.size(); i++) {
+        for (int j=0; j < matrix_.size(); j++) {
+
+            if (matrix_[i][j] == 0) {
+                cost = matrix_.get_vertex_cost(i, j);
+
+                if (cost > maxCost) {
+                    maxCost = cost;
+                    nextVertex = vertex_t(i, j)
+                }
+            }
+        }
+    }
+
+    return nextVertex;
 }
 
 /**
@@ -172,15 +190,38 @@ NewVertex StageState::choose_new_vertex() {
  * @param new_vertex
  */
 void StageState::update_cost_matrix(vertex_t new_vertex) {
-    throw;  // TODO: Implement it!
+    
+    for (int i=0; i < matrix_.size(); i++) {
+        matrix_[i][new_vertex.col] = INF;
+        matrix_[new_vertex.row][i] = INF;
+    }
 }
 
 /**
- * Reduce the cost matrix.
+ * Reduce the cost matrix.zne 
  * @return The sum of reduced values.
  */
 cost_t StageState::reduce_cost_matrix() {
-    throw;  // TODO: Implement it!
+    cost_t reducedRowSum = matrix_.reduce_rows();
+
+    for (int i=0; i < matrix_.size(); i++) {
+        bool ZeroExists = false;
+
+        for (int j=0; j < matrix_.size(); j++) {
+            
+            if (matrix_[i][j] == 0) {
+                ZeroExists = true;
+                break;
+            }
+        }
+
+        if (!ZeroExists) {
+            reducedRowSum += matrix_.reduce_cols();
+            break;
+        }
+    }
+
+    return reducedRowSum;
 }
 
 /**
